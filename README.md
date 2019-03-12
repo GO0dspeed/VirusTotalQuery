@@ -8,7 +8,9 @@ This program is designed to utilize the VirusTotal free API to check the hashes 
 This program will output the following:
 
 Date of scan
+
 How many engines have detected the file
+
 The files hash
 
 A table of which engines detected the file and the results
