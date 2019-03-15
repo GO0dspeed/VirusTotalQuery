@@ -1,7 +1,7 @@
 # VirusTotalQuery
 Python script to query the VirusTotal API for information on hashes
 
-Usage: queryVT.py <hash>
+Usage: queryVT.py <file/url> <url/hash>
   
 This program is designed to utilize the VirusTotal free API to check the hashes of files to verify detection
 
