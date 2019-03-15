@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 # queryVT.py - Query VirusTotal API for information about the hash of an
 # executable
-# usage: queryVT.py hash
+# usage: queryVT.py <file/url> <url/hash>
 
 import requests
 import logging
@@ -16,6 +16,11 @@ import sys
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 logging.disable(logging.CRITICAL)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# Sanity Check: Verify that there are three arguments
+if len(sys.argv) < 3:
+	print('usage: queryVT.py <file/url> <url/hash>')
+	sys.exit()
 
 # Check for the existence of a config file. If not create one
 config = configparser.ConfigParser()
@@ -34,15 +39,22 @@ else:
 params = {}
 
 params['apikey'] = config['VIRUSTOTAL']['apikey'] 														# my API key
-params['resource'] = sys.argv[1] 																		# Hash is the second argument from sys
+params['resource'] = sys.argv[2] 																		# Hash is the second argument from sys
 # more logging ish for debugging
 logging.debug('The paramaters are %s' % params)
 
 # URL for VirusTotal api
-url = 'https://www.virustotal.com/vtapi/v2/file/report'
+urlfile = 'https://www.virustotal.com/vtapi/v2/file/report'
+urlurl = 'https://www.virustotal.com/vtapi/v2/url/report'
 
 # Request to VirusTotal
-response = requests.get(url, params=params, verify=False)
+if sys.argv[1] == 'file':
+	response = requests.get(urlfile, params=params, verify=False)
+elif sys.argv[1] == 'url':
+	response = requests.get(urlurl, params=params, verify=False)
+
+
+
 # more logging ish for debugging
 logging.debug('The url is %s' % response.request.url)
 
@@ -51,9 +63,9 @@ vtData = json.loads(response.text, encoding=object)
 
 try:
 	print('\nResults: \n')
-	print('Scan date: %s' % vtData['scan_date'])															# Print the scan date
-	print('%s out of %s engines detected this file' % (vtData['positives'], vtData['total']))				# Print how many engines detected this as malicious
-	print('The sha256 hash of this file is %s \n' % vtData['sha256'])										# Print the hash of the file
+	print('Scan date: %s' % vtData['scan_date'])														# Print the scan date
+	print('%s out of %s engines detected this file' % (vtData['positives'], vtData['total']))			# Print how many engines detected this as malicious
+	print('The sha256 hash of this file is %s \n' % vtData['sha256'])									# Print the hash of the file
 except:
 	KeyError
 	print('No Detections')
