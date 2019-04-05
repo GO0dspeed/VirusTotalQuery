@@ -19,7 +19,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Sanity Check: Verify that there are three arguments
 if len(sys.argv) < 3:
-	print('usage: queryVT.py <file/url> <url/hash>')
+	print('usage: queryVT.py <-f hash> <-u url>')
 	sys.exit()
 
 # Check for the existence of a config file. If not create one
