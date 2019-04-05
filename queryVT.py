@@ -48,23 +48,22 @@ urlfile = 'https://www.virustotal.com/vtapi/v2/file/report'
 urlurl = 'https://www.virustotal.com/vtapi/v2/url/report'
 
 # Request to VirusTotal
-if sys.argv[1] == 'file':
+if sys.argv[1] == '-f':
 	response = requests.get(urlfile, params=params, verify=False)
-elif sys.argv[1] == 'url':
+elif sys.argv[1] == '-u':
 	response = requests.get(urlurl, params=params, verify=False)
 
 
 
 # more logging ish for debugging
 logging.debug('The url is %s' % response.request.url)
-
 # Data is stored as a python dictionary
 vtData = json.loads(response.text, encoding=object)
 
 try:
 	print('\nResults: \n')
 	print('Scan date: %s' % vtData['scan_date'])														# Print the scan date
-	print('%s out of %s engines detected this file' % (vtData['positives'], vtData['total']))			# Print how many engines detected this as malicious
+	print('%s out of %s engines detected this file/url' % (vtData['positives'], vtData['total']))		# Print how many engines detected this as malicious
 	print('The sha256 hash of this file is %s \n' % vtData['sha256'])									# Print the hash of the file
 except:
 	KeyError
